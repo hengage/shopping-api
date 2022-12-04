@@ -1,0 +1,17 @@
+{
+  "name": "shopping_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "hengage",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^6.7.5",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20"
+  }
+}
