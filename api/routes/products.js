@@ -5,13 +5,25 @@ const Product = require('./models/product')
 
 router.get('/', async (req, res, next) => {
     const products = await Product.find()
+        .select('name price')
+        .exec()
     console.log(products.length)
 
     if ( !products.length > 0 ) { 
         return res.status(404).json('No products in the store')
     }
-    const productCount = `${products.length} products in the store`
-    return res.status(200).json({productCount, products})
+    const response = {
+        productsCount: `${products.length} products in the store`,
+        products: products.map(product => {
+            return {
+                // ...product._doc,
+                product,
+                url: `http://localhost:3000/products/${product.id}`
+
+            }
+        })
+    }
+    return res.status(200).json({response})
 });
 
 router.post('/', async (req, res) => {
@@ -21,7 +33,12 @@ router.post('/', async (req, res) => {
         }) 
     try {
         const newProduct = await product.save()
-        return res.status(201).json(newProduct)
+        const returnProduct = {
+            name: newProduct.name,
+            price: newProduct.price,
+            url: `http://localhost:3000/products/${newProduct._id}`
+        }
+        return res.status(201).json(returnProduct)
     } catch (error) {
         return res.status(400).json(error)
         // console.log(error)
@@ -39,6 +56,8 @@ router.get('/:productId', async (req, res, next) => {
     const productId  = req.params.productId
     try {
         const product = await Product.findById(productId)
+            .select('name price')
+            .exec()
         if (!product || product === null ){
             return res.status(404).json('No product for the given id')
         }
