@@ -3,6 +3,13 @@ const router = express.Router()
 
 const Product = require('./models/product')
 
+const productURL = (id) => {
+    /* 
+    Gets the id of a product and returns the url to the product
+    */
+    return `http://localhost:3000/products/${id}`
+}
+
 router.get('/', async (req, res, next) => {
     const products = await Product.find()
         .select('name price')
@@ -18,7 +25,7 @@ router.get('/', async (req, res, next) => {
             return {
                 // ...product._doc,
                 product,
-                url: `http://localhost:3000/products/${product.id}`
+                url: productURL(product._id)
 
             }
         })
@@ -36,7 +43,7 @@ router.post('/', async (req, res) => {
         const returnProduct = {
             name: newProduct.name,
             price: newProduct.price,
-            url: `http://localhost:3000/products/${newProduct._id}`
+            url: productURL(product._id)
         }
         return res.status(201).json(returnProduct)
     } catch (error) {
