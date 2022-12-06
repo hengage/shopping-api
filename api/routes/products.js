@@ -85,7 +85,8 @@ router.patch('/:productId', async (req, res, next) => {
     try {
         const updatedProduct = await Product.findByIdAndUpdate(
             productId,
-            {$set: productParams}
+            {$set: productParams},
+            {new: true}
         )
         res.status(201).json({updatedProduct})
         next()

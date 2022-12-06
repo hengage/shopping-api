@@ -4,9 +4,12 @@ const router = express.Router()
 const Order = require('./models/orders')
 
 router.get('/', (req, res, next) => {
-    res.status(200).json({
-        message: 'Order fetched'
-    });
+    const orders = Order.find().exec()
+    const response = {
+        count: orders.length,
+        orders
+    }
+    res.status(200).json({response});
 });
 
 router.post('/', async (req, res, next) => {
@@ -27,7 +30,8 @@ router.post('/', async (req, res, next) => {
     }
 });
 
-router.get('/:orderId', (req, res, next) => {
+router.get('/:orderId', async (req, res, next) => {
+
     res.status(200).json({
         message: 'Order details', id: req.params.orderId
     });
