@@ -3,13 +3,27 @@ const router = express.Router()
 
 const Order = require('../models/orders')
 
+const orderURL = (id) => {
+    /* 
+    Gets the id of an order and returns the url to the product
+    */
+    return `http://localhost:3000/orders/${id}`
+}
+
 router.get('/', async (req, res, next) => {
     const orders = await Order.find()
     .select('product quantity')
     .exec()
     const response = {
         count: orders.length,
-        orders
+        orders : orders.map(order => {
+            return {
+            order,
+            url:{
+                method: "GET",
+                path:  orderURL(order.id)
+            }}
+        })
     }
     res.status(200).json({response});
 });
@@ -24,7 +38,7 @@ router.post('/', async (req, res, next) => {
         const newOrder = await order.save()
         const response = {
             newOrder,
-            url: `http://localhost:3000/orders/${newOrder._id}`
+            url: orderURL(newOrder._id)
         }
         return res.status(201).json(response)
     } catch (error) {
