@@ -1,10 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-const Order = require('./models/orders')
+const Order = require('../models/orders')
 
-router.get('/', (req, res, next) => {
-    const orders = Order.find().exec()
+router.get('/', async (req, res, next) => {
+    const orders = await Order.find()
+    .select('product quantity')
+    .exec()
     const response = {
         count: orders.length,
         orders
