@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const Order = require('../models/orders')
+const Product = require('../models/product')
 
 const orderURL = (id) => {
     /* 
@@ -29,6 +30,11 @@ router.get('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
+    const findProduct = await Product.findById(req.body.productId).exec()
+    if (!findProduct || findProduct == null) {
+        return res.status(404).json('The product does not exist')
+    }
+
     const order = new Order ({
         product: req.body.productId,
         quantity: req.body.quantity
