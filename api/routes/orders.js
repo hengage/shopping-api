@@ -48,8 +48,12 @@ router.post('/', async (req, res, next) => {
 
 router.get('/:orderId', async (req, res, next) => {
 
-    res.status(200).json({
-        message: 'Order details', id: req.params.orderId
+    const order = await Order.findOne({_id: req.params.orderId})
+    .select('product quantity')
+    .exec()
+
+    return res.status(200).json({
+        order
     });
 });
 
