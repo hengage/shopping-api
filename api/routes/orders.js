@@ -14,6 +14,8 @@ const orderURL = (id) => {
 router.get('/', async (req, res, next) => {
     const orders = await Order.find()
     .select('product quantity')
+    .populate('product', 'name price')
+
     .exec()
     const response = {
         count: orders.length,
@@ -56,6 +58,7 @@ router.get('/:orderId', async (req, res, next) => {
 
     const order = await Order.findOne({_id: req.params.orderId})
     .select('product quantity')
+    .populate('product', 'name price')
     .exec()
 
     return res.status(200).json({
